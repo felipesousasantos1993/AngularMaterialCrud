@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR">
+<head>
+	<title>Contato-AngularJS</title>
+	<meta charset="utf-8"/>
+
+	<link rel="stylesheet" href="resources/css/angular-material.min.css"/>
+	<link rel="stylesheet" href="resources/css/md-data-table-style.css"/>
+	<link rel="stylesheet" href="resources/css/custom.css"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+	<script src="resources/js/jquery-2.1.4.min.js"> </script>
+  	<script src="resources/js/lodash.min.js"> </script>
+	<script src="resources/js/angular.min.js"></script>
+	<script src="resources/js/angular-animate.min.js"></script>
+	<script src="resources/js/angular-aria.min.js"></script>
+	<script src="resources/js/angular-messages.min.js"></script>
+	<script src="resources/js/angular-material.min.js"></script>
+	<script src="resources/js/angular-sanitize.js"></script>
+	<script src="resources/js/angular-material-icons.min.js"></script>	
+	<script src="resources/js/md-data-table-templates.js"></script>	
+	<script src="resources/js/md-data-table.js"></script>	
+	<script src="resources/js/angular-mask.js"></script>
+	<script src="resources/js/ngCpfCnpj.js"></script>
+	
+	<script src="resources/js/moment-with-locales.js"></script>
+
+	<script src="resources/js/appController.js"></script>
+
+</head>
+<body ng-app="app" ng-cloak >
+	<div ng-controller="appController" layout="column" md-theme="default" ng-cloak class="md-inline-form">
+		<md-content layout-padding>
+			<div>
+				<form name="contatoForm" novalidate>
+					<div layout-gt-xs="row">
+						<md-input-container flex-gt-sm="10">
+							<label>CPF</label>
+							<input id="cpf" ng-model="contato.cpf" name="cpf" ng-cpf autocomplete="off" ui-br-cpf-mask
+							required>
+							<div ng-messages="contatoForm.cpf.$error">
+								<div ng-message="required">Campo obrigatório</div>
+								<div ng-show="contato.cpf.length == 11 && contatoForm.cpf.$invalid"
+								class="md-input-message-animation ng-scope">CPF inválido
+							</div>
+						</div>
+					</md-input-container>
+					<md-input-container flex-gt-sm="50">
+						<label>Nome</label>
+						<input ng-model="contato.nome" name="nome" required autocomplete="off">
+						<div ng-messages="contatoForm.nome.$error">
+							<div ng-message="required">Campo obrigatório</div>
+						</div>
+					</md-input-container>
+					<md-input-container class="md-block">
+						<label>Data de Nascimento</label>
+						<md-datepicker ng-model="contato.dtNascimento" name="dtNascimento" required/>
+						<div ng-messages="contatoForm.dtNascimento.$error">
+							<div ng-message="required">Campo obrigatório</div>
+						</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-xs="row">
+					<md-input-container flex-gt-sm="45">
+						<label>E-mail</label>
+						<input ng-model="contato.email" name="email" type="email" minlength="10" maxlength="100"
+						ng-pattern="/^.+@.+\..+$/" required autocomplete="off">
+						<div ng-messages="contatoForm.email.$error">
+							<div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+								Deve conter entre 10 e 100 caracteres e ter o padrão de e-mail.
+							</div>
+						</div>
+					</md-input-container>
+					<md-input-container flex-gt-sm="15">
+						<label>Telefone</label>
+						<input ng-model="contato.telefone" name="telefone" type="text" ui-br-phone-number
+						ng-minlength="14" autocomplete="off">
+						<div ng-messages="contatoForm.telefone.$error">
+							<div ng-message="minlength">Telefone incompleto</div>
+						</div>
+					</md-input-container>
+					<md-input-container flex-gt-sm="15">
+						<label>Celular</label>
+						<input ng-model="contato.celular" name="celular" type="text" ui-br-phone-number
+						ng-minlength="15" autocomplete="off">
+						<div ng-messages="contatoForm.celular.$error">
+							<div ng-message="minlength">Celular incompleto</div>
+						</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-xs="row">
+					<md-input-container flex-gt-sm="15" ui-br-cep-mask>
+						<label>CEP</label>
+						<input ng-model="contato.cep" name="cep" ng-blur="buscaCep()" required ui-br-cep-mask
+						type="text" autocomplete="off">
+						<div ng-messages="contatoForm.cep.$error">
+							<div ng-message="required">Campo obrigatório</div>
+						</div>
+					</md-input-container>
+
+					<md-input-container flex-gt-sm="45">
+						<label>Endereço</label>
+						<input ng-model="contato.endereco" disabled="disabled" type="text" autocomplete="off">
+					</md-input-container>
+					<md-input-container flex-gt-sm="15">
+						<label>Número</label>
+						<input ng-model="contato.numero" type="text" autocomplete="off">
+					</md-input-container>
+				</div>
+				<div layout-gt-xs="row">
+					<md-input-container flex-gt-sm="20">
+						<label>Bairro</label>
+						<input ng-model="contato.bairro" disabled="disabled" type="text" autocomplete="off">
+					</md-input-container>
+					<md-input-container flex-gt-sm="45">
+						<label>Cidade</label>
+						<input ng-model="contato.cidade" disabled="disabled" type="text" autocomplete="off">
+					</md-input-container>
+					<md-input-container flex-gt-sm="10">
+						<label>UF</label>
+						<input ng-model="contato.uf" disabled="disabled" type="text" autocomplete="off">
+					</md-input-container>
+				</div>
+				<div layout="row">
+					<md-button ng-click="gravar()" class="md-raised md-primary" type="submit">Gravar</md-button>
+					<md-button class="md-raised" type="reset">Limpar</md-button>
+					<md-button class="md-raised right-align red" ng-click="removerTodos()" type="reset"
+					md-colors="{background: 'red'}">Remover Todos
+				</md-button>
+			</div>
+			<div  ng-hide="!contatos.length">
+				<md-card style="margin:0px"> 
+		            <md-input-container style="margin:15px;">
+		                <label>Pesquisar</label>
+		                <input type="text" ng-model="filterName">
+		            </md-input-container>
+		            <div ng-hide="true">
+		                {{(filteredItems = (contatos | filter: filterName))}}
+		            </div> 
+		        </md-card>
+				<mdt-table data-ng-init="init()" mdt-row="{'data': filteredItems}" sortable-columns="true" animate-sort-icon="true" paginated-rows="{isEnabled: true, rowsPerPageValues: [5,10,20,100]}">
+					<mdt-header-row>
+						<mdt-column align-rule="left">CPF</mdt-column>
+						<mdt-column align-rule="left">Nome</mdt-column>
+						<mdt-column align-rule="left">Data de Nascimento</mdt-column>
+						<mdt-column align-rule="left">E-mail</mdt-column>
+						<mdt-column align-rule="left">Ações</mdt-column>
+					</mdt-header-row>
+					<mdt-row ng-repeat="c in filteredItems track by $index">
+						<mdt-cell> {{c.cpf | cpfFormatado:true}}</mdt-cell>
+						<mdt-cell> {{c.nome}}</mdt-cell>
+						<mdt-cell> {{c.dtNascimento | date : 'dd/MM/yyyy' }}</mdt-cell>
+						<mdt-cell> {{c.email}}</mdt-cell>
+						<mdt-cell html-content="true">
+							<md-button class="md-fab md-primary" ng-click="selecionar(c, $index)" aria-label="Editar">
+								<md-tooltip md-direction="bottom">
+									Editar
+								</md-tooltip>
+								<i class="material-icons">edit</i>
+							</md-button>
+							<md-button class="md-fab" md-colors="{background: 'red'}" aria-label="Excluir" ng-click="showConfirm($event, c, $index)">
+								<md-tooltip md-direction="bottom">
+									Excluir
+								</md-tooltip>
+								<i class="material-icons">delete</i>
+							</md-button>
+						</mdt-cell>
+					</mdt-row>
+				</mdt-table>
+			</div>
+		</form>
+	</div>
+</md-content>
+</div>
+</body>
+</html>
